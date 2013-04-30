@@ -1,4 +1,9 @@
 <h1>Progress Tracker</h1>
 
-4/7/13: Up to 7.2.1
+4/21/13: Up to 8.2.6
+4/21/13: Up to 8.2.5
+4/21/13: Up to 8.2.4
+4/17/13: Up to 8.1.2
+4/17/13: Finished chapter 7 and exercises, started reading chapter 8 but have not done anything, start next time with creating the new branch for sign-in-out
 4/13/13: Just filled in listing 7.23
+4/7/13: Up to 7.2.1
