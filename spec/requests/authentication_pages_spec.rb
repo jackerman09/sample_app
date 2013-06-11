@@ -9,6 +9,11 @@ describe "Authentication" do
 		it { should have_title_and_h1('Sign in') }
 	end
 
+	describe "before signing in" do
+		it { should_not have_link('Profile') }
+		it { should_not have_link('Settings') }
+	end
+
 	describe "signin" do
 		before { visit signin_path }
 
@@ -17,6 +22,8 @@ describe "Authentication" do
 
 			it { should have_title('Sign in') }
 			it { should have_error_message('Invalid') }
+
+			
 			
 			#The following is in spec/support/utilities.rb
 				# it { should have_selector('title', text: 'Sign in') }
@@ -78,6 +85,20 @@ describe "Authentication" do
 					it "should render the desired protected page" do
 						page.should have_title('Edit user')
 					end
+
+					describe "when signing in again" do
+			            before do
+			            	delete signout_path
+			            	visit signin_path
+			            	fill_in "Email",    with: user.email
+			            	fill_in "Password", with: user.password
+			            	click_button "Sign in"
+			            end
+
+			            it "should render the default (profile) page" do
+			            	page.should have_selector('title', text: user.name) 
+			            end
+			        end
 				end
 			end
 
@@ -96,6 +117,19 @@ describe "Authentication" do
 				describe "visiting the user index" do
 					before { visit users_path }
 					it { should have_title('Sign in') }
+				end
+			end
+
+			describe "in the Microposts controller" do
+				
+				describe "submitting to the create action" do
+					before { post microposts_path }
+					specify	{ response.should redirect_to(signin_path) }
+				end
+
+				describe "submitting to the destroy action" do
+					before { delete micropost_path(FactoryGirl.create(:micropost)) }
+					specify { response.should redirect_to(signin_path) }
 				end
 			end
 		end
@@ -126,6 +160,16 @@ describe "Authentication" do
 		        before { delete user_path(user) }
 		        specify { response.should redirect_to(root_path) }        
 	      	end
+      	end
+
+      	describe "as admin user" do
+      		let(:admin) { FactoryGirl.create(:admin) }
+      		before { sign_in admin }
+
+      		describe "can't delete self by submitting DELETE request to Users#destroy" do
+      			before { delete user_path(admin) }
+      			specify { response.should redirect_to(users_path), flash[:error].should =~ /Cannot delete own admin account!/i }
+      		end
       	end
 	end
 end
