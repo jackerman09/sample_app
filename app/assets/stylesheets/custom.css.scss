@@ -182,6 +182,12 @@ input, textarea, select, .uneditable-input {
 	margin-right: 10px;
 }
 
+.countdown {
+	display: inline;
+	padding-left: 30px;
+	color: $grayLight;
+}
+
 aside {
 	textarea {
 		height: 100px;
